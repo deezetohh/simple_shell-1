@@ -59,7 +59,33 @@ int main(void)
 
 	while (1)
 	{
+		_putchar("$");
+		_putchar(" ");
+		fflush(stdout);
+		read_len = getline(&line, &len, stdin);
 
+		/* handling ctrl D */
+		if (read_len == -1)
+		{
+			_putchar("\n");
+			break;
+		}
+
+		if (line[read_len - 1] == '\n')
+		{
+			line[read_len - 1] = '\0'
+		}
+		
+		/* tokenizing the line */
+		argc = 0;
+		token = strtok(line, " ");
+		while (token != NULL && argc < MAX_COMMAND_LENGTH - 1)
+		{
+			args[argc] = token;
+			argc++;
+			token = strtok(NULL, " ");
+		}
+		args[argc] = NULL;
 	}
 	return (0);
 
