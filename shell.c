@@ -39,7 +39,8 @@ int _strcmp(char *s1, char *s2)
 }
 
 /**
- * main - simple shell program that displays a prompt and allows the user to enters a command
+ * main - simple shell program that displays a prompt
+ * and allows the user to enters a command
  * The program continues to accept input until the user enters ctrl-D.
  *
  * Return: 0
@@ -47,20 +48,69 @@ int _strcmp(char *s1, char *s2)
 int main(void)
 {
 	char *line = NULL;
-	size_t len = 0;
-	size_t read_len;
+	size_t line_len = 0;
+	ssize_t read_len;
 	pid_t pid;
 	int status;
 	char *args[MAX_COMMAND_LENGTH];
 	int argc;
 	char *token;
-	char *err_meg = "./shell";
+	char *err_msg = "./shell";
+
 	errno = ENOENT;
 
 	while (1)
 	{
-
+		printf("$ ");
+		fflush(stdout);
+		read_len = getline(&line, &line_len, stdin);
+		if (read_len == -1)
+		{
+			printf("\n");
+			break;
+		}
+		if (line[read_len - 1] == '\n')
+		{
+			line[read_len - 1] = '\0';
+		}
+		argc = 0;
+		token = strtok(line, " ");
+		while (token != NULL && argc < MAX_COMMAND_LENGTH - 1)
+		{
+			args[argc] = token;
+			argc++;
+			token = strtok(NULL, " ");
+		}
+		args[argc] = NULL;
+		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
+		{
+			pid = fork();
+			if (pid < 0)
+			{
+				perror(err_msg);
+				exit(EXIT_FAILURE);
+			}
+			else if (pid == 0)
+			{
+				execve(args[0], args, NULL);
+				perror(err_msg);
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				if (waitpid(pid, &status, 0) == -1)
+				{
+					perror(err_msg);
+					exit(EXIT_FAILURE);
+				}
+			}
+		}
+		else
+		{
+			perror(err_msg);
+		}
 	}
+	free(line);
 	return (0);
-
 }
+
