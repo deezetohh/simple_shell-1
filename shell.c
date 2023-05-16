@@ -17,3 +17,36 @@ void _putchar(char c)
 {
 	write(1, &c, 1);
 }
+
+/**
+ */
+int _strcmp(const char *str1, const char *str2)
+{
+}
+
+/**
+ * main - simple shell program that displays a prompt and allows the user to enters a command
+ * The program continues to accept input until the user enters ctrl-D.
+ *
+ * Return: 0
+ */
+int main(void)
+{
+	char *line = NULL;
+	size_t len = 0;
+	size_t read_len;
+	pid_t pid;
+	int status;
+	char *args[MAX_COMMAND_LENGTH];
+	int argc;
+	char *token;
+	char *err_meg = "./shell";
+	errno = ENOENT;
+
+	while (1)
+	{
+
+	}
+	return (0);
+
+}
