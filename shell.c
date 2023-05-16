@@ -75,18 +75,19 @@ int main(void)
 		{
 			line[read_len - 1] = '\0'
 		}
-		
-		/* tokenizing the line */
-		argc = 0;
-		token = strtok(line, " ");
-		while (token != NULL && argc < MAX_COMMAND_LENGTH - 1)
+
+		parse_input(line, args, &argc);
+
+		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
 		{
-			args[argc] = token;
-			argc++;
-			token = strtok(NULL, " ");
+			execute_command(args, err_msg);
 		}
-		args[argc] = NULL;
+		else
+		{
+			perror(err_msg);
+		}
 	}
+	free(line);
 	return (0);
 
 }
