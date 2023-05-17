@@ -100,35 +100,52 @@ int main(void)
 {
 	char *line = NULL;
 	size_t len = 0;
-	size_t read_len;
-	pid_t pid;
-	int status;
+	int read_len;
 	char *args[MAX_COMMAND_LENGTH];
 	int argc;
 	char *token;
-	char *err_meg = "./shell";
+	char *err_msg = "./shell";
 
 	errno = ENOENT;
 	while (1)
 	{
-		_putchar("$");
-		_putchar(" ");
+		_putchar(36);
+		_putchar(' ');
 		fflush(stdout);
 		read_len = getline(&line, &len, stdin);
 		if (read_len == -1)
 		{
-			_putchar("\n");
+			_putchar('\n');
 			break;
 		}
 		if (line[read_len - 1] == '\n')
 		{
-			line[read_len - 1] = '\0'
+			line[read_len - 1] = '\0';
 		}
 		parse_input(line, args, &argc);
+		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
+
+		argc = 0;
+		token = strtok(line, " ");
+		while (token != NULL && argc < MAX_COMMAND_LENGTH -1)
+		{
+			execute_command(args, err_msg);
+		}
+		else
+		{
+			perror(err_msg);
+		}
+		args[argc] = NULL;
+
 		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
 		{
 			execute_command(args, err_msg);
 		}
+		/*if (argc > 1)
+		 *{
+		 *	execute_command2();
+		 *}
+		 */
 		else
 		{
 			perror(err_msg);
