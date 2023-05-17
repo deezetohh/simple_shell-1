@@ -59,26 +59,6 @@ void parse_input(char *line, char *args[], int *argc)
 	args[*argc] = NULL;
 }
 /**
- * _strcmp - string comparison
- * @s1: first argument
- * @s2: second argument
- * Return: greater, less or zero based on input
- */
-int _strcmp(char *s1, char *s2)
-{
-	while (*s1 == *s2)
-	{
-		if (*s1 == '\0')
-		{
-			return (0);
-		}
-		s1++;
-		s2++;
-	}
-	return (*s1 - *s2);
-}
-
-/**
  * main - simple shell program that displays a prompt and
  * allows the user to enters a command
  * The program continues to accept input until the user enters ctrl-D.
@@ -89,7 +69,7 @@ int main(void)
 {
 	char *line = NULL;
 	size_t len = 0;
-	int read_len;
+	ssize_t read_len;
 	char *args[MAX_COMMAND_LENGTH];
 	int argc;
 	char *err_msg = "./shell";
@@ -97,7 +77,7 @@ int main(void)
 	errno = ENOENT;
 	while (1)
 	{
-		_putchar(36);
+		_putchar('$');
 		_putchar(' ');
 		fflush(stdout);
 		read_len = getline(&line, &len, stdin);
