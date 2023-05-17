@@ -76,11 +76,15 @@ int main(void)
 			line[read_len - 1] = '\0'
 		}
 
-		parse_input(line, args, &argc);
+		
 
 		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
 		{
 			execute_command(args, err_msg);
+		}
+		if (argc > 1)
+		{
+			execute_command2();
 		}
 		else
 		{
