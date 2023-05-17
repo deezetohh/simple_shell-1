@@ -4,15 +4,15 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <errno.h>
-
+#include "main.h"
 #define MAX_COMMAND_LENGTH 1024
 
 /**
- * executeCommand - handls the /bin/ls
+ * execute_command - handls the /bin/ls
  * @args: arguments
  * @err_msg: argument 2
  */
-void executeCommand(char *args[], char *err_msg)
+void execute_command(char *args[], char *err_msg)
 {
 	pid_t pid;
 	int status;
@@ -39,12 +39,12 @@ void executeCommand(char *args[], char *err_msg)
 	}
 }
 /**
- * parseInput - tokenize inputs
+ * parse_input - tokenize inputs
  * @line: argument 1
  * @args: argument 2
  * @argc: argument 3
  */
-void parseInput(char *line, char *args[], int *argc)
+void parse_input(char *line, char *args[], int *argc)
 {
 	char *token;
 
@@ -58,17 +58,6 @@ void parseInput(char *line, char *args[], int *argc)
 	}
 	args[*argc] = NULL;
 }
-/**
- * _putchar - writes out a charactor in stdout
- * @c: charactor to be written in stdout
- *
- * Return: void
- */
-void _putchar(char c)
-{
-	write(1, &c, 1);
-}
-
 /**
  * _strcmp - string comparison
  * @s1: first argument
@@ -103,7 +92,6 @@ int main(void)
 	int read_len;
 	char *args[MAX_COMMAND_LENGTH];
 	int argc;
-	char *token;
 	char *err_msg = "./shell";
 
 	errno = ENOENT;
@@ -119,37 +107,17 @@ int main(void)
 			break;
 		}
 		if (line[read_len - 1] == '\n')
-		{
 			line[read_len - 1] = '\0';
-		}
 		parse_input(line, args, &argc);
-		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
-
-		argc = 0;
-		token = strtok(line, " ");
-		while (token != NULL && argc < MAX_COMMAND_LENGTH -1)
-		{
-			execute_command(args, err_msg);
-		}
-		else
-		{
-			perror(err_msg);
-		}
-		args[argc] = NULL;
 
 		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
-		{
 			execute_command(args, err_msg);
-		}
-		/*if (argc > 1)
-		 *{
+		/**
+		 * if (argc > 1)
 		 *	execute_command2();
-		 *}
 		 */
 		else
-		{
 			perror(err_msg);
-		}
 	}
 	free(line);
 	return (0);
