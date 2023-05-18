@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
@@ -16,6 +17,7 @@ void execute_command(char *args[], char *err_msg)
 {
 	pid_t pid;
 	int status;
+	extern char **environ;
 
 	pid = fork();
 	if (pid < 0)
@@ -25,9 +27,12 @@ void execute_command(char *args[], char *err_msg)
 	}
 	else if (pid == 0)
 	{
-		execve(args[0], args, NULL);
-		perror(err_msg);
-		exit(EXIT_FAILURE);
+		if (execve("/bin/ls", args, environ) == -1)
+		{
+			execve(args[0], args, environ);
+			perror(err_msg);
+			exit(EXIT_FAILURE);
+		}
 	}
 	else
 	{
@@ -65,15 +70,16 @@ void parse_input(char *line, char *args[], int *argc)
  *
  * Return: 0
  */
-int main(void)
+
+int main(int argc, char **argv)
 {
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read_len;
 	char *args[MAX_COMMAND_LENGTH];
-	int argc;
 	char *err_msg = "./shell";
 
+	(void)argv;
 	errno = ENOENT;
 	while (1)
 	{
@@ -92,12 +98,10 @@ int main(void)
 
 		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
 			execute_command(args, err_msg);
-		/**
-		 * if (argc > 1)
-		 *	execute_command2();
-		 */
-		else
-			perror(err_msg);
+		/*if (argc >= 2)
+		 *	execute_command2(argc, argv);
+		 */else
+	 	 perror(err_msg);
 	}
 	free(line);
 	return (0);
