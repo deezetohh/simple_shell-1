@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <errno.h>
 #include "main.h"
 #define MAX_COMMAND_LENGTH 1024
+
 
 /**
  * execute_command - handls the /bin/ls
@@ -20,6 +20,8 @@ void execute_command(char *args[], char *err_msg)
 	extern char **environ;
 
 	pid = fork();
+	if (strcmp(args[0], "ls") == 0)
+		strcpy(args[0], "/bin/ls");
 	if (pid < 0)
 	{
 		perror(err_msg);
@@ -27,9 +29,8 @@ void execute_command(char *args[], char *err_msg)
 	}
 	else if (pid == 0)
 	{
-		if (execve("/bin/ls", args, environ) == -1)
+		if (execve(args[0], args, environ) == -1)
 		{
-			execve(args[0], args, environ);
 			perror(err_msg);
 			exit(EXIT_FAILURE);
 		}
@@ -79,6 +80,7 @@ int main(int argc, char **argv)
 	char *args[MAX_COMMAND_LENGTH];
 	char *err_msg = "./shell";
 
+
 	(void)argv;
 	errno = ENOENT;
 	while (1)
@@ -96,12 +98,8 @@ int main(int argc, char **argv)
 			line[read_len - 1] = '\0';
 		parse_input(line, args, &argc);
 
-		if (argc == 1 && _strcmp(args[0], "/bin/ls") == 0)
+		if (argc == 1)
 			execute_command(args, err_msg);
-		/*if (argc >= 2)
-		 *	execute_command2(argc, argv);
-		 */else
-	 	 perror(err_msg);
 	}
 	free(line);
 	return (0);
