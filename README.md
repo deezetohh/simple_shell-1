@@ -1,4 +1,4 @@
-le shell is a unix like command line interpreter. This program reads commands from the user, tokenizes them, and executes the commands using "execve" system call.
+simple shell is a unix like command line interpreter. This program reads commands from the user, tokenizes them, and executes the commands using "execve" system call.
 
 	Tasks:
 	1. Write a UNIX command line interpreter.
