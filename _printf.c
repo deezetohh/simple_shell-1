@@ -1,5 +1,4 @@
 #include "main.h"
-
 /**
  * _printf - Brief description of the function.
  * @str: string char

@@ -1,12 +1,54 @@
+#include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <errno.h>
-#include "main.h"
 #define MAX_COMMAND_LENGTH 1024
 
+/**
+ * handle_arguments - handle command with arguments
+ * @args: arguments
+ * @err_msg: second argument - error message
+ */
+void handle_arguments(char *args[], char *err_msg)
+{
+	pid_t pid;
+	int status;
+
+	if (strcmp(args[0], "ls") == 0)
+	{
+		args[0] = "/bin/ls";
+	}
+	if (access(args[0], F_OK) == -1)
+	{
+		perror(err_msg);
+		return;
+	}
+	pid = fork();
+	if (pid < 0)
+	{
+		perror(err_msg);
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		if (execve(args[0], args, environ) == -1)
+		{
+			perror(err_msg);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		if (waitpid(pid, &status, 0) == -1)
+		{
+			perror(err_msg);
+			exit(EXIT_FAILURE);
+		}
+	}
+}
 /**
  * execute_command - handles command lines with 1 argument
  * @args: arguments
@@ -105,6 +147,8 @@ int main(int argc, char **argv)
 
 		if (argc == 1)
 			execute_command(args, err_msg);
+		if (argc > 1)
+			handle_arguments(args, err_msg);
 	}
 	free(line);
 	return (0);

@@ -7,4 +7,3 @@ char *_strcpy(char *dest, const char *src);
 void _printf(const char *str);
 extern char **environ;
 #endif
-

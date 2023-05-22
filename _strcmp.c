@@ -1,3 +1,5 @@
+#include "main.h"
+#include <string.h>
 /**
  * _strcmp - string comparison
  * @s1: first argument
