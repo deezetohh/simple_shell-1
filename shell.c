@@ -8,6 +8,20 @@
 #define MAX_COMMAND_LENGTH 1024
 
 /**
+ * print_env_var - prints the environment variable
+ */
+void print_env_var(void)
+{
+	char **env = environ;
+
+	while (*env != NULL)
+	{
+		write(STDOUT_FILENO, *env, _strlen(*env));
+		write(STDOUT_FILENO, "\n", 1);
+		env++;
+	}
+}
+/**
  * handle_arguments - handle command with arguments
  * @args: arguments
  * @err_msg: second argument - error message
@@ -17,7 +31,7 @@ void handle_arguments(char *args[], char *err_msg)
 	pid_t pid;
 	int status;
 
-	if (strcmp(args[0], "ls") == 0)
+	if (_strcmp(args[0], "ls") == 0)
 	{
 		args[0] = "/bin/ls";
 	}
@@ -104,8 +118,11 @@ void parse_input(char *line, char *args[], int *argc)
 	token = strtok(line, " ");
 	while (token != NULL && *argc < MAX_COMMAND_LENGTH - 1)
 	{
-		args[*argc] = token;
-		(*argc)++;
+		if (token[0] != '#')
+		{
+			args[*argc] = token;
+			(*argc)++;
+		}
 		token = strtok(NULL, " ");
 	}
 	args[*argc] = NULL;
@@ -126,9 +143,8 @@ int main(int argc, char **argv)
 	size_t len = 0;
 	ssize_t read_len;
 	char *args[MAX_COMMAND_LENGTH];
-	char *err_msg = "./shell";
+	char *err_msg = *argv;
 
-	(void)argv;
 	errno = ENOENT;
 	while (1)
 	{
@@ -144,8 +160,9 @@ int main(int argc, char **argv)
 		if (line[read_len - 1] == '\n')
 			line[read_len - 1] = '\0';
 		parse_input(line, args, &argc);
-
-		if (argc == 1)
+		if (_strcmp(args[0], "env") == 0)
+			print_env_var();
+		if (argc == 1 && (_strcmp(args[0], "env") != 0))
 			execute_command(args, err_msg);
 		if (argc > 1)
 			handle_arguments(args, err_msg);

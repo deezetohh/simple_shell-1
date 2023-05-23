@@ -6,4 +6,5 @@ void free_args(char *args[]);
 char *_strcpy(char *dest, const char *src);
 void _printf(const char *str);
 extern char **environ;
+int _strlen(char *s);
 #endif
