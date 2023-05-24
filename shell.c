@@ -155,6 +155,7 @@ int main(int argc, char **argv)
 		if (read_len == -1)
 		{
 			_putchar('\n');
+			free(line);
 			exit(EXIT_SUCCESS);
 		}
 		if (line[read_len - 1] == '\n')
