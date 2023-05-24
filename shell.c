@@ -17,7 +17,7 @@ void print_env_var(void)
 	while (*env != NULL)
 	{
 		write(STDOUT_FILENO, *env, _strlen(*env));
-		write(STDOUT_FILENO, "\n", 1);
+		write(STDOUT_FILENO, "\n", stdout);
 		env++;
 	}
 }
@@ -75,7 +75,7 @@ void execute_command(char *args[], char *err_msg)
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 	pid = fork();
 	if (_strcmp(args[0], "ls") == 0)
