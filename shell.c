@@ -75,7 +75,6 @@ void execute_command(char *args[], char *err_msg)
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
-		_putchar('\n');
 		exit(0);
 	}
 	pid = fork();
