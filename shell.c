@@ -77,9 +77,14 @@ void execute_command(char *args[], char *err_msg)
 	{
 		exit(EXIT_SUCCESS);
 	}
-	pid = fork();
 	if (_strcmp(args[0], "ls") == 0)
-		_strcpy(args[0], "/bin/ls");
+		args[0] = "/bin/ls";
+	if (access(args[0], F_OK) == -1)
+	{
+		perror(err_msg);
+		return;
+	}
+	pid = fork();
 	if (pid < 0)
 	{
 		perror(err_msg);
