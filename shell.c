@@ -1,3 +1,4 @@
+#include <sys/types.h>
 #include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,9 +144,10 @@ int main(int argc, char **argv)
 	size_t len = 0;
 	ssize_t read_len;
 	char *args[MAX_COMMAND_LENGTH];
-	char *err_msg = *argv;
+	char *err_msg = argv[0];
 
 	errno = ENOENT;
+	argc = 0;
 	while (1)
 	{
 		_putchar('$');
