@@ -119,12 +119,12 @@ void parse_input(char *line, char *args[], int *argc)
 	char *token;
 
 	*argc = 0;
-	token = strtok(line, " ");
+	token = _strtok(line, " ");
 	while (token != NULL && *argc < MAX_COMMAND_LENGTH - 1)
 	{
 		args[*argc] = token;
 		(*argc)++;
-		token = strtok(NULL, " ");
+		token = _strtok(NULL, " ");
 	}
 	args[*argc] = NULL;
 }
