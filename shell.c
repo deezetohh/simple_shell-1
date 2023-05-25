@@ -150,13 +150,10 @@ int main(int argc, char **argv)
 	argc = 0;
 	while (1)
 	{
-		_putchar('$');
-		_putchar(' ');
 		fflush(stdout);
 		read_len = getline(&line, &len, stdin);
 		if (read_len == -1)
 		{
-			_putchar('\n');
 			free(line);
 			exit(EXIT_SUCCESS);
 		}
