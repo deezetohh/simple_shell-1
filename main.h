@@ -14,5 +14,6 @@ void execute_command(char **args, char *err_msg);
 void handle_arguments(char **args, char *err_msg);
 void run_non_interactive_mode(int argc, char **argv);
 void run_interactive_mode(int argc, char **argv);
+void exit_command(char **args);
 #endif
 

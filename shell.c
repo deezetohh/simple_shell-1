@@ -62,8 +62,7 @@ void execute_command(char *args[], char *err_msg)
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
-		_printf("\n\n[Disconnected...]\n");
-		exit(EXIT_SUCCESS);
+		exit_command(args);
 	}
 	if (_strcmp(args[0], "ls") == 0)
 		args[0] = "/bin/ls";
