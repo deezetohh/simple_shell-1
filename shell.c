@@ -140,33 +140,50 @@ void parse_input(char *line, char *args[], int *argc)
 
 int main(int argc, char **argv)
 {
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read_len;
-	char *args[MAX_COMMAND_LENGTH];
-	char *err_msg = argv[0];
+		char *line = NULL;
+		size_t len = 0;
+		ssize_t read_len;
+		char *err_msg = argv[0];
+		char *args[MAX_COMMAND_LENGTH];
 
-	errno = ENOENT;
-	argc = 0;
-	while (1)
+		errno = ENOENT;
+	if (argc > 1)
 	{
-		fflush(stdout);
-		read_len = getline(&line, &len, stdin);
-		if (read_len == -1)
+		while ((read_len = getline(&line, &len, stdin)) != 1)
 		{
-			free(line);
-			exit(EXIT_SUCCESS);
+			if (line[read_len - 1] == '\n')
+				line[read_len - 1] = '\0';
+			parse_input(line, args, &argc);
+			if (_strcmp(args[0], "env") == 0)
+				print_env_var();
+			if (argc == 1 && (_strcmp(args[0], "env") != 0))
+				execute_command(args, err_msg);
+			if (argc > 1)
+				handle_arguments(args, err_msg);
 		}
-		if (line[read_len - 1] == '\n')
-			line[read_len - 1] = '\0';
-		parse_input(line, args, &argc);
-		if (_strcmp(args[0], "env") == 0)
-			print_env_var();
-		if (argc == 1 && (_strcmp(args[0], "env") != 0))
-			execute_command(args, err_msg);
-		if (argc > 1)
-			handle_arguments(args, err_msg);
+		free(line);
 	}
-	free(line);
+	else
+	{
+		while (1)
+		{
+			fflush(stdout);
+			_printf("$ ");
+			read_len = getline(&line, &len, stdin);
+			if (read_len == -1)
+			{
+				free(line);
+				exit(EXIT_SUCCESS);
+			}
+			if (line[read_len - 1] == '\n')
+				line[read_len - 1] = '\0';
+			argc = 0;
+			parse_input(line, args, &argc);
+			if (argc == 1 && (_strcmp(args[0], "env") != 0))
+				execute_command(args, err_msg);
+			if (argc > 1)
+				handle_arguments(args, err_msg);
+		}
+	}
 	return (0);
 }
