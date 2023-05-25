@@ -172,6 +172,8 @@ void run_interactive_mode(int argc, char **argv)
 			line[read_len - 1] = '\0';
 		argc = 0;
 		parse_input(line, args, &argc);
+		if(_strcmp(args[0], "env") == 0)
+			print_env_var();
 		if (argc == 1 && (_strcmp(args[0], "env") != 0))
 			execute_command(args, err_msg);
 		if (argc > 1)
