@@ -9,20 +9,6 @@
 #define MAX_COMMAND_LENGTH 1024
 
 /**
- * print_env_var - prints the environment variable
- */
-void print_env_var(void)
-{
-	char **env = environ;
-
-	while (*env != NULL)
-	{
-		write(STDOUT_FILENO, *env, _strlen(*env));
-		write(STDOUT_FILENO, "\n", 1);
-		env++;
-	}
-}
-/**
  * handle_arguments - handle command with arguments
  * @args: arguments
  * @err_msg: second argument - error message
@@ -129,61 +115,66 @@ void parse_input(char *line, char *args[], int *argc)
 	args[*argc] = NULL;
 }
 /**
- * main - simple shell program that displays a prompt and
+ * run_non_interactive_mode - simple shell program that displays a prompt and
  * allows the user to enters a command
  * The program continues to accept input until the user enters ctrl-D.
  * @argc: arg 1
  * @argv: arg 2
- *
- * Return: 0
  */
-
-int main(int argc, char **argv)
+void run_non_interactive_mode(int argc, char **argv)
 {
-		char *line = NULL;
-		size_t len = 0;
-		ssize_t read_len;
-		char *err_msg = argv[0];
-		char *args[MAX_COMMAND_LENGTH];
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read_len;
+	char *err_msg = argv[0];
+	char *args[MAX_COMMAND_LENGTH];
 
-		errno = ENOENT;
-	if (argc > 1)
+	errno = ENOENT;
+	while ((read_len = getline(&line, &len, stdin)) != 1)
 	{
-		while ((read_len = getline(&line, &len, stdin)) != 1)
-		{
-			if (line[read_len - 1] == '\n')
-				line[read_len - 1] = '\0';
-			parse_input(line, args, &argc);
-			if (_strcmp(args[0], "env") == 0)
-				print_env_var();
-			if (argc == 1 && (_strcmp(args[0], "env") != 0))
-				execute_command(args, err_msg);
-			if (argc > 1)
-				handle_arguments(args, err_msg);
-		}
-		free(line);
+		if (line[read_len - 1] == '\n')
+			line[read_len - 1] = '\0';
+		parse_input(line, args, &argc);
+		if (_strcmp(args[0], "env") == 0)
+			print_env_var();
+		if (argc == 1 && (_strcmp(args[0], "env") != 0))
+			execute_command(args, err_msg);
+		if (argc > 1)
+			handle_arguments(args, err_msg);
 	}
-	else
+	free(line);
+}
+/**
+ * run_interactive_mode - executes the shell in the interactive mode
+ * @argc: arg count
+ * @argv: arg vector
+ */
+void run_interactive_mode(int argc, char **argv)
+{
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read_len;
+	char *args[MAX_COMMAND_LENGTH];
+	char *err_msg = argv[0];
+
+	while (1)
 	{
-		while (1)
-		{
-			fflush(stdout);
+		fflush(stdout);
+		if (isatty(STDIN_FILENO))
 			_printf("$ ");
-			read_len = getline(&line, &len, stdin);
-			if (read_len == -1)
-			{
-				free(line);
-				exit(EXIT_SUCCESS);
-			}
-			if (line[read_len - 1] == '\n')
-				line[read_len - 1] = '\0';
-			argc = 0;
-			parse_input(line, args, &argc);
-			if (argc == 1 && (_strcmp(args[0], "env") != 0))
-				execute_command(args, err_msg);
-			if (argc > 1)
-				handle_arguments(args, err_msg);
+		read_len = getline(&line, &len, stdin);
+		if (read_len == -1)
+		{
+			free(line);
+			exit(EXIT_SUCCESS);
 		}
+		if (line[read_len - 1] == '\n')
+			line[read_len - 1] = '\0';
+		argc = 0;
+		parse_input(line, args, &argc);
+		if (argc == 1 && (_strcmp(args[0], "env") != 0))
+			execute_command(args, err_msg);
+		if (argc > 1)
+			handle_arguments(args, err_msg);
 	}
-	return (0);
 }
