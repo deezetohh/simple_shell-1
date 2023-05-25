@@ -7,9 +7,11 @@
 void print_env_var(void)
 {
 	char **env = environ;
+	size_t len;
 
 	while (*env != NULL)
 	{
+		len = strlen(*env);
 		write(STDOUT_FILENO, *env, _strlen(*env));
 		write(STDOUT_FILENO, "\n", 1);
 		env++;
