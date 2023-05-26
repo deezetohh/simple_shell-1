@@ -18,8 +18,6 @@ void handle_arguments(char *args[], char *err_msg)
 	pid_t pid;
 	int status;
 
-	if (_strcmp(args[0], "exit") == 0 && args[1] != NULL)
-		exit(int_converter(args[1]));
 	if (_strcmp(args[0], "ls") == 0)
 	{
 		args[0] = "/bin/ls";
@@ -135,9 +133,9 @@ void run_non_interactive_mode(int argc, char **argv)
 		parse_input(line, args, &argc);
 		if (_strcmp(args[0], "env") == 0)
 			print_env_var();
-		if (_strcmp(args[0], "exit") == 0)
+		if (_strcmp(args[0], "exit") == 0 && argc == 2)
 			exit_command(args);
-		if (argc == 1 && (_strcmp(args[0], "env") == 0))
+		if (argc == 1 && (_strcmp(args[0], "env") == 0) && (_strcmp(args[0], "exit") != 0))
 			execute_command(args, err_msg);
 		if (argc > 1)
 			handle_arguments(args, err_msg);
@@ -174,7 +172,7 @@ void run_interactive_mode(int argc, char **argv)
 		parse_input(line, args, &argc);
 		if (_strcmp(args[0], "env") == 0)
 			print_env_var();
-		if (_strcmp(args[0], "exit") == 0)
+		if (_strcmp(args[0], "exit") == 0 && argc ==2)
 			exit_command(args);
 		if (argc == 1 && (_strcmp(args[0], "env") != 0) && (_strcmp(args[0], "exit") != 0))
 			execute_command(args, err_msg);
