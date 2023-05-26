@@ -135,7 +135,7 @@ void run_non_interactive_mode(int argc, char **argv)
 			print_env_var();
 		if (_strcmp(args[0], "exit") == 0 && argc == 2)
 			exit_command(args);
-		if (argc == 1 && (_strcmp(args[0], "env") == 0))
+		if (argc == 1 && (_strcmp(args[0], "env") != 0))
 			execute_command(args, err_msg);
 		if (argc > 1)
 			handle_arguments(args, err_msg);
